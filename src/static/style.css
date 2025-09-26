@@ -1,0 +1,139 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0B0F1A;/*fond principal*/
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+h1, h2 {
+  color: #00CFFF;/*les titres*/
+}
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+input, button {
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+input {
+  background-color: #121E2C;/* champs d'entrés*/
+  color: white;
+  width: 200px;
+}
+
+button {
+  background-color: #00CFFF;/* Bouton défaut*/
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #009EBF;/*bouton hover*/
+}
+
+.section {
+  background-color: #112233;/*color of the widgets*/
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+}
+.disclaimer-box {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #112233;
+  border-left: 4px solid #dc3545;
+  border-radius: 10px;
+  font-size: 0.9rem;
+
+}
+
+.disclaimer-box a {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.disclaimer-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#error {
+  color: red;
+}
+#dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.section {
+  flex: 1 1 300px;
+  box-sizing: border-box;
+}
+
+/* Pour rendre le cercle de moyenne centré */
+#averageCircle {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Responsive pour téléphone */
+@media (max-width: 600px) {
+  body {
+    padding: 20px;
+  }
+
+  #dashboard {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section {
+    width: 100%;
+    max-width: none;
+  }
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.section {
+  flex: 1 1 45%;
+  max-width: 45%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+  .section {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
