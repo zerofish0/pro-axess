@@ -13,6 +13,7 @@ function login() {
   .then(data => {
     if (data.success) {
       document.getElementById("login").style.display = "none";
+      document.querySelector('.bottom-left').remove();
       document.getElementById("dashboard").style.display = "block";
       document.getElementById("greeting").innerText = `Bonjour ${data.infos.name} 👋`;
       loadGrades();

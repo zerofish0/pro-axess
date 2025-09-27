@@ -92,6 +92,14 @@ ul {
   flex: 1 1 300px;
   box-sizing: border-box;
 }
+.bottom-left {
+  position: fixed;
+  bottom: 2px;      /* distance du bas */
+  left: 2px;        /* distance du bord gauche */
+  color: white;      /* couleur du texte */
+  font-size: 12px;   /* taille du texte */
+  line-height: 0.1;  /* espacement entre lignes */
+}
 
 /* Pour rendre le cercle de moyenne centré */
 #averageCircle {

@@ -86,6 +86,5 @@ class Axess :
 
 		self.planner = data
 		self._log("Fetched Planner.")
-		print(f"PLANNNER from main : {data}")
 		return self.planner
 
