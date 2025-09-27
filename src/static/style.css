@@ -94,7 +94,7 @@ ul {
 }
 .bottom-left {
   position: fixed;
-  bottom: 2px;      /* distance du bas */
+  bottom: 10px;      /* distance du bas */
   left: 2px;        /* distance du bord gauche */
   color: white;      /* couleur du texte */
   font-size: 12px;   /* taille du texte */

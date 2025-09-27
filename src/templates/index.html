@@ -3,8 +3,10 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#0B0F1A">
   <title>Pro Axess</title>
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon.ico') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/icon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -20,13 +22,13 @@
         <a href="https://github.com/zerofish0/axess-pro" target="_blank">
           Consulter le dépôt du projet
         </a><br><br>
-        Remerciements : <br><br>
+        Remerciements : <br>
         <a href="https://github.com/bain3/pronotepy" target="_blank">
           - Pronotepy
-        </a><br><br>
+        </a><br>
         <a href="https://chatgpt.com" target="_blank">
           - ChatGPT
-        </a><br><br>
+        </a><br>
     </div>
   </div>
 
@@ -57,10 +59,18 @@
   </div>
   <div class="bottom-left">
     <p>projet réalisé par Zerofish0</p>
-    <p>version : 1.0.0 (27/09/2025)</p>
-    <p>lien de l'ENT : https://0280994d.index-education.net/pronote/eleve.html</p>
+    <p>version : 2.0 (27/09/2025)</p>
+    <a href="https://0280994d.index-education.net/pronote/eleve.html" target="_blank">
+      lien de l'ENT
+      </a>
   </div>
-
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/static/service-worker.js')
+        .then(() => console.log('Service Worker enregistré'))
+        .catch(err => console.error('Erreur SW :', err));
+    }
+  </script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
