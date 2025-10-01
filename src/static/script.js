@@ -1,21 +1,4 @@
-const VAPID_PUBLIC_KEY = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFS0h5RnlJSmxsTFREQnFCVnYrS3I0OElpRVBoMwpRazhyWnJ5a1NFckhpSjQ0ekVEUmhmb2xVOW00MWVSOEozaWNQbXdMWjIxZ1F5dkpEYkFtVStlNHZRPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg";
-
-
-navigator.serviceWorker.ready.then(reg => {
-  reg.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: VAPID_PUBLIC_KEY
-  }).then(subscription => {
-    // Envoyer l'abonnement au serveur Flask
-    fetch('/subscribe', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(subscription)
-    });
-  });
-});
-
-function login() {
+function login() { //se connecter
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
@@ -35,7 +18,6 @@ function login() {
 
       const greeting = document.getElementById('greeting');
       const hour = new Date().getHours();
-      console.log(hour);
       if (hour >= 19 || hour < 5) {
         greeting.textContent = `Bonsoir ${data.infos.name} 🌙`;
       } else if (hour >= 5 && hour < 12) {
@@ -53,8 +35,7 @@ function login() {
   });
 }
 
-function loadGrades_out() {
-  fetch("/test_notification")
+function loadGrades_out() { // afficher une liste des moyennes (plus utilisé)
   fetch("/grades")
     .then(res => res.json())
     .then(data => {
@@ -69,12 +50,10 @@ function loadGrades_out() {
     });
 }
 
-function loadGrades() {
+function loadGrades() { // dessiner le graphique des matières et de la moyenne générale
   fetch("/grades")
     .then(res => res.json())
     .then(data => {
-      //const list = document.getElementById("grades");
-      //list.innerHTML = '';
 
       let total = 0;
       let count = 0;
@@ -91,11 +70,6 @@ function loadGrades() {
           labels.push(matiere);
           values.push(moyenne);
         }
-
-        //const li = document.createElement("li");
-        // cannot delete Note in index.html, it break evrything
-        //li.innerText = `${matiere} : ${data[matiere].average}`;
-        //list.appendChild(li);
       }
 
       const generalAverage = total / count;
@@ -105,7 +79,7 @@ function loadGrades() {
     });
 }
 
-function loadHomework() {
+function loadHomework() { // afficher les devoirs
   fetch("/homework")
     .then(res => res.json())
     .then(data => {
@@ -135,7 +109,7 @@ function loadHomework() {
       }
     });
 }
-function loadPlanner() {
+function loadPlanner() { // afficher les cours de demain
   fetch("/planner")
     .then(res => res.json())
     .then(data => {
@@ -159,35 +133,80 @@ function loadPlanner() {
 }
 
 
-function drawAverageCircle(average) {
-  const ctx = document.getElementById("averageCircle").getContext("2d");
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ["Moyenne", "Reste"],
-      datasets: [{
-        data: [average, 20 - average],
-        backgroundColor: ["#1dfa00","#444"],//#00D0FF", "#444"],//ici la couleur du cercle
-        borderWidth: 0
-      }]
-    },
-    options: {
-      cutout: "80%",
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false },
-        title: {
-          display: true,
-          text: average.toFixed(2),
-          color: "#FFFFFF",
-          font: { size: 20 }
-        }
-      }
+// Échelle moyenne → image
+const averageImages = [
+  { min: 0, max: 7.99, src: "images/rouge.png" },
+  { min: 8, max: 9.99, src: "images/orange.png" },
+  { min: 10, max: 13.99, src: "images/jaune.png" },
+  { min: 14, max: 15.99, src: "images/vert.png" },
+  { min: 16, max: 20, src: "images/vert-fonce.png" }
+];
+
+// Fonction pour trouver l’image correspondant à la moyenne
+function getImageForAverage(average) {
+  for (const img of averageImages) {
+    if (average >= img.min && average <= img.max) {
+      return img.src;
     }
-  });
+  }
+  return "images/default.png"; // image par défaut si rien ne correspond
 }
 
-function drawBarChart(labels, values) {
+// Fonction principale pour dessiner le graphe
+function drawAverageCircle(average) {
+  const ctx = document.getElementById("averageCircle").getContext("2d");
+  const imageSrc = getImageForAverage(average);
+  const img = new Image();
+  img.src = "static/icons/icon-512.png";//imageSrc;
+
+  img.onload = () => {
+    new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Moyenne", "Reste"],
+        datasets: [
+          {
+            data: [average, 20 - average],
+            backgroundColor: ["#1dfa00", "#444"],
+            borderWidth: 0
+          }
+        ]
+      },
+      options: {
+        cutout: "80%",
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+          title: {
+            display: true,
+            text: average.toFixed(2),
+            color: "#FFFFFF",
+            font: { size: 20 }
+          }
+        },
+        animation: false
+      },
+      plugins: [
+        {
+          id: "centerImage",
+          afterDraw: chart => {
+            const { ctx, chartArea } = chart;
+            const xCenter = (chartArea.left + chartArea.right) / 2;
+            const yCenter = (chartArea.top + chartArea.bottom) / 2;
+            const size = chart.width * 0.5; // taille = 20 % du canvas
+
+            ctx.save();
+            ctx.drawImage(img, xCenter - size / 2, yCenter - size / 2, size, size);
+            ctx.restore();
+          }
+        }
+      ]
+    });
+  };
+}
+
+
+function drawBarChart(labels, values) { // dessiner le graphe de moyennes
   const ctx = document.getElementById("barChart").getContext("2d");
   new Chart(ctx, {
     type: 'bar',

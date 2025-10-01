@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <link rel="manifest" href="/static/manifest.json">
@@ -8,14 +10,24 @@
   <title>Pro Axess</title>
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/icon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 <body>
+  
+  <div id="loading-overlay">
+
+  <div class="spinner"></div>
+  
+  </div>
   <div id="login">
+
     <h1>Pro Axess</h1>
     <input type="text" id="username" placeholder="Identifiant">
     <input type="password" id="password" placeholder="Mot de passe">
     <button onclick="login()" id="loginButton">Se connecter</button>
     <p id="error"></p>
+
     <div id="login" class="disclaimer-box">
       <strong>ℹ️ Informations</strong><br>
       Ce projet est en développement actif et peut contenir des fonctionnalités expérimentales.  
@@ -24,13 +36,11 @@
       <a href="https://github.com/zerofish0/axess-pro" target="_blank">
         Consulter le dépôt GitHub du projet
       </a><br><br>
-
       <strong>Mentions légales</strong><br>
       Ce projet est distribué à titre éducatif et sans garantie d’aucune sorte.  
       L’auteur ne saurait être tenu responsable de tout dommage, perte de données ou mauvaise utilisation du code.  
       En utilisant ce projet, vous acceptez ces conditions.  
       <br><br>
-
       <strong>Remerciements</strong><br>
       <a href="https://github.com/bain3/pronotepy" target="_blank">
         - Pronotepy
@@ -38,11 +48,12 @@
       <a href="https://chatgpt.com" target="_blank">
         - ChatGPT
       </a><br>
-
     </div>
+
   </div>
 
   <div id="dashboard" style="display:none;">
+
     <h1 id="greeting">Bonjour 👋</h1>
 
     <div class="row">
@@ -50,23 +61,30 @@
         <h2>📝 Devoirs à faire</h2>
         <ul id="homework"></ul>
       </div>
+
       <div class="section">
         <h2>📅 Cours de demain</h2>
         <ul id="planner"></ul>
       </div>
+
     </div>
 
     <div class="row">
+
       <div class="section">
         <h2>📈 Moyenne générale</h2>
         <canvas id="averageCircle" width="200" height="200"></canvas>
       </div>
+
       <div class="section">
         <h2>📊 Moyennes par matière</h2>
         <canvas id="barChart" height="300"></canvas>
       </div>
+
     </div>
+
   </div>
+
   <div class="bottom-left">
     <p>projet réalisé par Zerofish0</p>
     <p>version : 2.0 (27/09/2025)</p>
@@ -74,13 +92,18 @@
       lien de l'ENT
       </a>
   </div>
+
   <script>
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/static/service-worker.js')
-        .then(reg => console.log('Service Worker enregistré'));
+        .then(() => console.log('Service Worker enregistré'))
+        .catch(err => console.error('Erreur SW :', err));
     }
   </script>
+
   <script src="{{ url_for('static', filename='script.js') }}"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </body>
 </html>
