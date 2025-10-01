@@ -1,3 +1,20 @@
+const VAPID_PUBLIC_KEY = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFS0h5RnlJSmxsTFREQnFCVnYrS3I0OElpRVBoMwpRazhyWnJ5a1NFckhpSjQ0ekVEUmhmb2xVOW00MWVSOEozaWNQbXdMWjIxZ1F5dkpEYkFtVStlNHZRPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg";
+
+
+navigator.serviceWorker.ready.then(reg => {
+  reg.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: VAPID_PUBLIC_KEY
+  }).then(subscription => {
+    // Envoyer l'abonnement au serveur Flask
+    fetch('/subscribe', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(subscription)
+    });
+  });
+});
+
 function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
@@ -15,7 +32,18 @@ function login() {
       document.getElementById("login").style.display = "none";
       document.querySelector('.bottom-left').remove();
       document.getElementById("dashboard").style.display = "block";
-      document.getElementById("greeting").innerText = `Bonjour ${data.infos.name} 👋`;
+
+      const greeting = document.getElementById('greeting');
+      const hour = new Date().getHours();
+      console.log(hour);
+      if (hour >= 19 || hour < 5) {
+        greeting.textContent = `Bonsoir ${data.infos.name} 🌙`;
+      } else if (hour >= 5 && hour < 12) {
+        greeting.textContent = `Bonjour ${data.infos.name} 👋`;
+      } else {
+        greeting.textContent = `Bon après-midi ${data.infos.name} ☀️`;
+      }
+      
       loadGrades();
       loadHomework();
       loadPlanner();
@@ -26,6 +54,7 @@ function login() {
 }
 
 function loadGrades_out() {
+  fetch("/test_notification")
   fetch("/grades")
     .then(res => res.json())
     .then(data => {
@@ -138,7 +167,7 @@ function drawAverageCircle(average) {
       labels: ["Moyenne", "Reste"],
       datasets: [{
         data: [average, 20 - average],
-        backgroundColor: ["#00D0FF", "#444"],//ici la couleur du cercle
+        backgroundColor: ["#1dfa00","#444"],//#00D0FF", "#444"],//ici la couleur du cercle
         borderWidth: 0
       }]
     },
@@ -167,7 +196,7 @@ function drawBarChart(labels, values) {
       datasets: [{
         label: "Moyenne",
         data: values,
-        backgroundColor: "#00D0FF"// ici la couleur des barres
+        backgroundColor: "#1dfa00" //"#00D0FF"// ici la couleur des barres
       }]
     },
     options: {

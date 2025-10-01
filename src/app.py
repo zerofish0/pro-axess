@@ -11,6 +11,12 @@ app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 CORS(app, supports_credentials=True)
 
+# Stockage temporaire des abonnements
+subscriptions = []
+
+VAPID_PRIVATE_KEY = "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ3NHMm00VkVHRlpUSStvaWMKOTNWN01jRzlWV0JPbkRzT1NoTVAwOUZEdElDaFJBTkNBQVFvZklYSWdtV1V0TU1Hb0ZXLzRxdmp3aUlRK0hkQwpUeXRtdktSSVNzZUluampNUU5HRitpVlQyYmpWNUh3bmVKdytiQXRuYldCREs4a05zQ1pUNTdpOQotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg"
+VAPID_CLAIMS = {"sub": "zerofish0@ik.me"}
+
 # Stockage des sessions utilisateur et de leurs données
 axess_sessions = {}
 
@@ -31,6 +37,38 @@ def safe_json(obj):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    sub = request.json
+    subscriptions.append(sub)
+    return jsonify({"success": True})
+
+def send_notification(note_title):
+    for sub in subscriptions:
+        webpush(
+            subscription_info=sub,
+            data=json.dumps({"title": "Nouvelle note", "body": note_title}),
+            vapid_private_key=VAPID_PRIVATE_KEY,
+            vapid_claims=VAPID_CLAIMS
+        )
+@app.route('/add_note', methods=['POST'])
+def add_note():
+    data = request.json
+    note_title = data['title']
+    send_notification(note_title)
+    return jsonify({"success": True})
+
+@app.route('/test_notification', methods=['GET'])
+def test_notification():
+    for sub in subscriptions:
+        webpush(
+            subscription_info=sub,
+            data=json.dumps({"title": "Test", "body": "Bonjour !"}),
+            vapid_private_key=VAPID_PRIVATE_KEY,
+            vapid_claims=VAPID_CLAIMS
+        )
+    return "Notification envoyée !"
 
 @app.route('/login', methods=['POST'])
 def login():

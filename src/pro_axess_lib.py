@@ -63,7 +63,7 @@ class Axess :
 	def getHomeworks(self,date_str) : #YYYY-MM-DD
 		self._log("Fetching homeworks...")
 		date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
-		hw = self.client.homework(date)
+		hw = self.client.homework(date,date)
 		data = dict()
 		for homework in hw : 
 			subject = homework.subject.name

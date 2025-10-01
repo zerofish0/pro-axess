@@ -17,18 +17,28 @@
     <button onclick="login()" id="loginButton">Se connecter</button>
     <p id="error"></p>
     <div id="login" class="disclaimer-box">
-        <strong>⚠️ Avertissement ⚠️</strong><br>
-        Toutes contributions et suggestions d'amélioration sont les bienvenue, ce projet est en développement actif, n'hésitez pas à me contacter pour plus d'informations.
-        <a href="https://github.com/zerofish0/axess-pro" target="_blank">
-          Consulter le dépôt du projet
-        </a><br><br>
-        Remerciements : <br>
-        <a href="https://github.com/bain3/pronotepy" target="_blank">
-          - Pronotepy
-        </a><br>
-        <a href="https://chatgpt.com" target="_blank">
-          - ChatGPT
-        </a><br>
+      <strong>ℹ️ Informations</strong><br>
+      Ce projet est en développement actif et peut contenir des fonctionnalités expérimentales.  
+      Vos contributions, suggestions et retours sont les bienvenus — contactez-moi pour en discuter.  
+      <br><br>
+      <a href="https://github.com/zerofish0/axess-pro" target="_blank">
+        Consulter le dépôt GitHub du projet
+      </a><br><br>
+
+      <strong>Mentions légales</strong><br>
+      Ce projet est distribué à titre éducatif et sans garantie d’aucune sorte.  
+      L’auteur ne saurait être tenu responsable de tout dommage, perte de données ou mauvaise utilisation du code.  
+      En utilisant ce projet, vous acceptez ces conditions.  
+      <br><br>
+
+      <strong>Remerciements</strong><br>
+      <a href="https://github.com/bain3/pronotepy" target="_blank">
+        - Pronotepy
+      </a><br>
+      <a href="https://chatgpt.com" target="_blank">
+        - ChatGPT
+      </a><br>
+
     </div>
   </div>
 
@@ -65,10 +75,9 @@
       </a>
   </div>
   <script>
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
       navigator.serviceWorker.register('/static/service-worker.js')
-        .then(() => console.log('Service Worker enregistré'))
-        .catch(err => console.error('Erreur SW :', err));
+        .then(reg => console.log('Service Worker enregistré'));
     }
   </script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
