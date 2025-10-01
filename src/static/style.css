@@ -1,3 +1,129 @@
+/*default theme*/
+:root{
+  --spinner_back: #f3f3f3;
+  --spinner_main:#00ff00;
+  --main-background:#000304;
+  --titles-and-graphs:#17b502;
+  --input-background:#0A0F10;
+  --input-text:#ffffff;
+  --button-background:#17b502;
+  --button-hover:#00B33C;
+  --widget-background:#0D1415;
+  --disclaimerbox-border:#1dfa00;
+  --disclaimerbox-link-color:#007bff;
+  --inputbox-shadow:#00ff00;
+}
+
+/* ================= THÈMES ================= */
+html[data-theme="red"] {
+  --spinner-back: #2b1a1a;
+  --spinner-main: #ff4c4c;
+  --main-background: #1a0f0f;
+  --titles-and-graphs: #ff6b6b;
+  --input-background: #2c1b1b;
+  --input-text: #ffffff;
+  --button-background: #ff4c4c;
+  --button-hover: #e63939;
+  --widget-background: #291515;
+  --disclaimerbox-border: #ff4c4c;
+  --disclaimerbox-link-color: #ff7b7b;
+  --inputbox-shadow: #ff4c4c;
+}
+
+html[data-theme="purple"] {
+  --spinner-back: #1f1323;
+  --spinner-main: #c77dff;
+  --main-background: #180f1e;
+  --titles-and-graphs: #d199ff;
+  --input-background: #211528;
+  --input-text: #ffffff;
+  --button-background: #c77dff;
+  --button-hover: #a05ce6;
+  --widget-background: #1a1022;
+  --disclaimerbox-border: #c77dff;
+  --disclaimerbox-link-color: #da9fff;
+  --inputbox-shadow: #c77dff;
+}
+
+html[data-theme="blue"] {
+  --spinner-back: #0e1826;
+  --spinner-main: #33c3ff;
+  --main-background: #09121d;
+  --titles-and-graphs: #66d6ff;
+  --input-background: #0c1a26;
+  --input-text: #ffffff;
+  --button-background: #33c3ff;
+  --button-hover: #1ea3e0;
+  --widget-background: #0b1821;
+  --disclaimerbox-border: #33c3ff;
+  --disclaimerbox-link-color: #66d6ff;
+  --inputbox-shadow: #33c3ff;
+}
+
+html[data-theme="green"] {
+  --spinner-back: #0b1a0b;
+  --spinner-main: #33ff77;
+  --main-background: #041104;
+  --titles-and-graphs: #66ff99;
+  --input-background: #0a120a;
+  --input-text: #ffffff;
+  --button-background: #33ff77;
+  --button-hover: #1ed65b;
+  --widget-background: #051205;
+  --disclaimerbox-border: #33ff77;
+  --disclaimerbox-link-color: #66ff99;
+  --inputbox-shadow: #33ff77;
+}
+
+html[data-theme="yellow"] {
+  --spinner-back: #1a1a0b;
+  --spinner-main: #fff066;
+  --main-background: #141404;
+  --titles-and-graphs: #fff699;
+  --input-background: #1c1c0b;
+  --input-text: #111100;
+  --button-background: #fff066;
+  --button-hover: #e6e600;
+  --widget-background: #191904;
+  --disclaimerbox-border: #fff066;
+  --disclaimerbox-link-color: #fff999;
+  --inputbox-shadow: #fff066;
+}
+
+
+#themeButtons {
+  position: fixed;
+  bottom: 10px;  /* distance par rapport au bas */
+  right: 10px;   /* distance par rapport à la droite */
+  display: flex;
+  gap: 6px;
+  z-index: 9999; /* toujours au-dessus du reste */
+}
+
+.theme-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(255,255,255,0.2);
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+/* couleurs par thème */
+.theme-btn[data-theme="red"] { background: #ff1a1a; }
+.theme-btn[data-theme="purple"] { background: #b200ff; }
+.theme-btn[data-theme="blue"] { background: #00b3ff; }
+.theme-btn[data-theme="green"] { background: #00ff44; }
+.theme-btn[data-theme="yellow"] { background: #ffff33; }
+
+/* effet néon au survol */
+.theme-btn:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 8px currentColor, 0 0 15px currentColor;
+}
+
+
 #loading-overlay {
   position: fixed;
   top: 0;
@@ -12,8 +138,8 @@
 }
 
 .spinner {
-  border: 8px solid #f3f3f3; /* cercle clair */
-  border-top: 8px solid #00ff00; /* cercle vert */
+  border: 8px solid var(--spinner_back); /* cercle clair */
+  border-top: 8px solid var(--spinner_main); /* cercle vert */
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -28,7 +154,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #000304;/*fond principal old : #0B0F1A*/
+  background-color: var(--main-background);/*fond principal old : #0B0F1A*/
   color: white;
   display: flex;
   flex-direction: column;
@@ -37,7 +163,7 @@ body {
 }
 
 h1, h2 {
-  color: #17b502;/*les titres old : #00CFFF*/
+  color: var(--titles-and-graphs);/*les titres old : #00CFFF*/
 }
 canvas {
   display: block;
@@ -57,23 +183,28 @@ input, button {
 }
 
 input {
-  background-color: #0A0F10;/*#121E2C;  champs d'entrés non affichéss ??? fffcc8*/
-  color: #0A0F10;/*white;*/
+  background-color: var(--input-background);/*#121E2C;  champs d'entrés non affichéss ??? fffcc8*/
+  color: var(--input-text);/*white;*/
   width: 200px;
 }
 
+input[type="text"]:focus, input[type="password"]:focus {
+  outline: none;            /* enlève le contour par défaut */
+  box-shadow: 0 0 10px var(--inputbox-shadow); /* glow */
+}
+
 button {
-  background-color: #17b502;/*#006B23;/*#00CFFF;/* Bouton défaut*/
-  color: white;
+  background-color: var(--button-background);/*#006B23;/*#00CFFF;/* Bouton défaut*/
+  color: black;
   cursor: pointer;
 }
 
 button:hover {
-  background-color:#00B33C;/* #009EBF;/*bouton hover*/
+  background-color:var(--button-hover);/* #009EBF;/*bouton hover*/
 }
 
 .section {
-  background-color: #0D1415;/*#112233;/*color of the widgets*/
+  background-color: var(--widget-background);/*#112233;/*color of the widgets*/
   padding: 20px;
   margin: 10px;
   border-radius: 8px;
@@ -83,15 +214,15 @@ button:hover {
 .disclaimer-box {
   margin-top: 2rem;
   padding: 1rem;
-  background-color: #0D1415;/*#112233;*/
-  border-left: 4px solid #1dfa00;/*#dc3545;*/
+  background-color: var(--widget-background);/*#112233;*/
+  border-left: 4px solid var(--disclaimerbox-border);/*#dc3545;*/
   border-radius: 10px;
   font-size: 0.9rem;
 
 }
 
 .disclaimer-box a {
-  color: #007bff;
+  color: var(--disclaimerbox-link-color);
   text-decoration: underline;
 }
 
@@ -175,4 +306,6 @@ ul {
     max-width: 100%;
   }
 }
+
+
 

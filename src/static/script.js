@@ -1,4 +1,56 @@
-function login() { //se connecter
+const themeButtons = document.querySelectorAll(".theme-btn");
+
+themeButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const theme = btn.getAttribute("data-theme");
+    document.documentElement.setAttribute("data-theme", theme);
+  });
+});
+
+function login() { // se connecter
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.display = 'flex'; // afficher le loader
+
+  fetch("/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    overlay.style.display = 'none'; // cacher le loader
+    document.getElementById('themeButtons').style.display = "none";
+
+    if (data.success) {
+      document.getElementById("login").style.display = "none";
+      const bottomLeft = document.querySelector('.bottom-left');
+      if (bottomLeft) bottomLeft.remove();
+      document.getElementById("dashboard").style.display = "block";
+
+      const greeting = document.getElementById('greeting');
+      const hour = new Date().getHours();
+      if (hour >= 19 || hour < 5) greeting.textContent = `Bonsoir ${data.infos.name} 🌙`;
+      else if (hour >= 5 && hour < 12) greeting.textContent = `Bonjour ${data.infos.name} 👋`;
+      else greeting.textContent = `Bon après-midi ${data.infos.name} ☀️`;
+
+      loadGrades();
+      loadHomework();
+      loadPlanner();
+    } else {
+      document.getElementById("error").innerText = data.error;
+    }
+  })
+  .catch(err => {
+    overlay.style.display = 'none';
+    document.getElementById("error").innerText = "Une erreur est survenue.";
+    console.error(err);
+  });
+}
+
+function loginout() { //se connecter
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
@@ -59,22 +111,16 @@ function loadGrades() { // dessiner le graphique des matières et de la moyenne 
       let count = 0;
       const labels = [];
       const values = [];
-      let globavg = data["global_avg"]
 
-      delete data["global_avg"];
       for (let matiere in data) {
         const moyenne = data[matiere].average;
         if (!isNaN(moyenne)) {
-          total += moyenne;
-          count++;
           labels.push(matiere);
           values.push(moyenne);
         }
       }
 
-      const generalAverage = total / count;
-
-      drawAverageCircle(generalAverage);
+      drawAverageCircle(data["global_avg"]);
       drawBarChart(labels, values);
     });
 }
@@ -135,21 +181,41 @@ function loadPlanner() { // afficher les cours de demain
 
 // Échelle moyenne → image
 const averageImages = [
-  { min: 0, max: 7.99, src: "images/rouge.png" },
-  { min: 8, max: 9.99, src: "images/orange.png" },
-  { min: 10, max: 13.99, src: "images/jaune.png" },
-  { min: 14, max: 15.99, src: "images/vert.png" },
-  { min: 16, max: 20, src: "images/vert-fonce.png" }
+  { min: 0.1, max: 2, src: "static/ranks/iron1.png" },
+  { min: 2, max: 4, src: "static/ranks/iron2.png" },
+  { min: 4, max: 6, src: "static/ranks/iron3.png" },
+  { min: 6, max: 7, src: "static/ranks/bronze1.png" },
+  { min: 7, max: 8, src: "static/ranks/bronze2.png" },
+  { min: 8, max: 9, src: "static/ranks/bronze3.png" },
+  { min: 9, max: 10, src: "static/ranks/silver1.png" },
+  { min: 10, max: 11, src: "static/ranks/silver2.png" },
+  { min: 11, max: 12, src: "static/ranks/silver3.png" },
+  { min: 12, max: 13, src: "static/ranks/gold1.png" },
+  { min: 13, max: 14, src: "static/ranks/gold2.png" },
+  { min: 14, max: 15, src: "static/ranks/gold3.png" },
+  { min: 15, max: 15.5, src: "static/ranks/platinum1.png" },
+  { min: 15.5, max: 16, src: "static/ranks/platinum2.png" },
+  { min: 16, max: 16.5, src: "static/ranks/platinum3.png" },
+  { min: 16.5, max: 16.9, src: "static/ranks/diamond1.png" },
+  { min: 17, max: 17.2, src: "static/ranks/diamond2.png" },
+  { min: 17.2, max: 17.5, src: "static/ranks/diamond3.png" },
+  { min: 17.5, max: 17.9, src: "static/ranks/ascendant1.png" },
+  { min: 17.9, max: 18.2, src: "static/ranks/ascendant2.png" },
+  { min: 18.2, max: 18.5, src: "static/ranks/ascendant3.png" },
+  { min: 18.5, max: 18.9, src: "static/ranks/immortal1.png" },
+  { min: 18.9, max: 19.2, src: "static/ranks/immortal2.png" },
+  { min: 19.2, max: 19.5, src: "static/ranks/immortal3.png" },
+  { min: 19.5, max: 999, src: "static/ranks/radiant.png" }
 ];
 
 // Fonction pour trouver l’image correspondant à la moyenne
 function getImageForAverage(average) {
   for (const img of averageImages) {
-    if (average >= img.min && average <= img.max) {
+    if (average >= img.min && average < img.max) {
       return img.src;
     }
   }
-  return "images/default.png"; // image par défaut si rien ne correspond
+  return "static/ranks/unranked.png"; // image par défaut si rien ne correspond
 }
 
 // Fonction principale pour dessiner le graphe
@@ -157,7 +223,7 @@ function drawAverageCircle(average) {
   const ctx = document.getElementById("averageCircle").getContext("2d");
   const imageSrc = getImageForAverage(average);
   const img = new Image();
-  img.src = "static/icons/icon-512.png";//imageSrc;
+  img.src = imageSrc;
 
   img.onload = () => {
     new Chart(ctx, {
@@ -167,7 +233,8 @@ function drawAverageCircle(average) {
         datasets: [
           {
             data: [average, 20 - average],
-            backgroundColor: ["#1dfa00", "#444"],
+
+            backgroundColor: [getComputedStyle(document.documentElement).getPropertyValue("--titles-and-graphs").trim(), "#444"],
             borderWidth: 0
           }
         ]
@@ -193,7 +260,7 @@ function drawAverageCircle(average) {
             const { ctx, chartArea } = chart;
             const xCenter = (chartArea.left + chartArea.right) / 2;
             const yCenter = (chartArea.top + chartArea.bottom) / 2;
-            const size = chart.width * 0.5; // taille = 20 % du canvas
+            const size = chart.width * 0.5; // taille = 50 % du canvas
 
             ctx.save();
             ctx.drawImage(img, xCenter - size / 2, yCenter - size / 2, size, size);
@@ -215,7 +282,7 @@ function drawBarChart(labels, values) { // dessiner le graphe de moyennes
       datasets: [{
         label: "Moyenne",
         data: values,
-        backgroundColor: "#1dfa00" //"#00D0FF"// ici la couleur des barres
+        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--titles-and-graphs").trim() //"#00D0FF"// ici la couleur des barres
       }]
     },
     options: {

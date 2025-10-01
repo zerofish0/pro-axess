@@ -52,10 +52,13 @@ class Axess :
 			for grade in  data[subject]["details"] : 
 				_sum += grade[0]*grade[1]
 				_sum_coeff += grade[1]
-				avg_sum += round(_sum/_sum_coeff,2)
-				avg_len += 1
+				#avg_sum += _sum/_sum_coeff
+				#avg_len += 1
 			data[subject]["average"] = round(_sum/_sum_coeff,2)
-		data["global_avg"] = round(avg_sum/avg_len,2)
+			avg_sum+= data[subject]["average"]
+			avg_len+=1
+		print(avg_sum,avg_len)
+		data["global_avg"] = avg_sum/avg_len
 		self.grades = data
 		self._log("Fetched grades.")
 		return self.grades
