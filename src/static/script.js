@@ -1,98 +1,66 @@
 const themeButtons = document.querySelectorAll(".theme-btn");
 
-themeButtons.forEach(btn => {
+themeButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     const theme = btn.getAttribute("data-theme");
     document.documentElement.setAttribute("data-theme", theme);
   });
 });
 
-function login() { // se connecter
+function login() {
+  // se connecter
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  const overlay = document.getElementById('loading-overlay');
-  overlay.style.display = 'flex'; // afficher le loader
+  const overlay = document.getElementById("loading-overlay");
+  overlay.style.display = "flex"; // afficher le loader
 
   fetch("/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
+    body: JSON.stringify({ username, password }),
   })
-  .then(res => res.json())
-  .then(data => {
-    overlay.style.display = 'none'; // cacher le loader
-    document.getElementById('themeButtons').style.display = "none";
+    .then((res) => res.json())
+    .then((data) => {
+      overlay.style.display = "none"; // cacher le loader
+      document.getElementById("themeButtons").style.display = "none";
 
-    if (data.success) {
-      document.getElementById("login").style.display = "none";
-      const bottomLeft = document.querySelector('.bottom-left');
-      if (bottomLeft) bottomLeft.remove();
-      document.getElementById("dashboard").style.display = "block";
+      if (data.success) {
+        document.getElementById("login").style.display = "none";
+        const bottomLeft = document.querySelector(".bottom-left");
+        if (bottomLeft) bottomLeft.remove();
+        document.getElementById("dashboard").style.display = "block";
 
-      const greeting = document.getElementById('greeting');
-      const hour = new Date().getHours();
-      if (hour >= 19 || hour < 5) greeting.textContent = `Bonsoir ${data.infos.name} 🌙`;
-      else if (hour >= 5 && hour < 12) greeting.textContent = `Bonjour ${data.infos.name} 👋`;
-      else greeting.textContent = `Bon après-midi ${data.infos.name} ☀️`;
+        const greeting = document.getElementById("greeting");
+        const hour = new Date().getHours();
+        if (hour >= 19 || hour < 5)
+          greeting.textContent = `Bonsoir ${data.infos.name} 🌙`;
+        else if (hour >= 5 && hour < 12)
+          greeting.textContent = `Bonjour ${data.infos.name} 👋`;
+        else greeting.textContent = `Bon après-midi ${data.infos.name} ☀️`;
 
-      loadGrades();
-      loadHomework();
-      loadPlanner();
-    } else {
-      document.getElementById("error").innerText = data.error;
-    }
-  })
-  .catch(err => {
-    overlay.style.display = 'none';
-    document.getElementById("error").innerText = "Une erreur est survenue.";
-    console.error(err);
-  });
-}
-
-function loginout() { //se connecter
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  fetch("/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ username, password })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      document.getElementById("login").style.display = "none";
-      document.querySelector('.bottom-left').remove();
-      document.getElementById("dashboard").style.display = "block";
-
-      const greeting = document.getElementById('greeting');
-      const hour = new Date().getHours();
-      if (hour >= 19 || hour < 5) {
-        greeting.textContent = `Bonsoir ${data.infos.name} 🌙`;
-      } else if (hour >= 5 && hour < 12) {
-        greeting.textContent = `Bonjour ${data.infos.name} 👋`;
+        loadGrades();
+        loadHomework();
+        loadPlanner();
+        loadElo();
       } else {
-        greeting.textContent = `Bon après-midi ${data.infos.name} ☀️`;
+        document.getElementById("error").innerText = data.error;
       }
-      
-      loadGrades();
-      loadHomework();
-      loadPlanner();
-    } else {
-      document.getElementById("error").innerText = data.error;
-    }
-  });
+    })
+    .catch((err) => {
+      overlay.style.display = "none";
+      document.getElementById("error").innerText = "Une erreur est survenue.";
+      console.error(err);
+    });
 }
 
-function loadGrades_out() { // afficher une liste des moyennes (plus utilisé)
+function loadGrades_out() {
+  // afficher une liste des moyennes (plus utilisé)
   fetch("/grades")
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       const list = document.getElementById("grades");
-      list.innerHTML = '';
+      list.innerHTML = "";
       for (let matiere in data) {
         const moyenne = data[matiere].average;
         const li = document.createElement("li");
@@ -102,11 +70,11 @@ function loadGrades_out() { // afficher une liste des moyennes (plus utilisé)
     });
 }
 
-function loadGrades() { // dessiner le graphique des matières et de la moyenne générale
+function loadGrades() {
+  // dessiner le graphique des matières et de la moyenne générale
   fetch("/grades")
-    .then(res => res.json())
-    .then(data => {
-
+    .then((res) => res.json())
+    .then((data) => {
       let total = 0;
       let count = 0;
       const labels = [];
@@ -125,23 +93,25 @@ function loadGrades() { // dessiner le graphique des matières et de la moyenne 
     });
 }
 
-function loadHomework() { // afficher les devoirs
+function loadHomework() {
+  // afficher les devoirs
   fetch("/homework")
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       console.log("DEBUGGING");
       const list = document.getElementById("homework");
-      list.innerHTML = ''; // On vide d'abord la liste
+      list.innerHTML = ""; // On vide d'abord la liste
 
       // Vérifier si les devoirs existent
       let devoirsExistants = false;
 
       for (let matiere in data) {
-        if (data[matiere].length > 0) { // Si la matière a des devoirs
+        if (data[matiere].length > 0) {
+          // Si la matière a des devoirs
           devoirsExistants = true;
-          data[matiere].forEach(devoir => {
+          data[matiere].forEach((devoir) => {
             const li = document.createElement("li");
-            li.innerHTML = `• <strong>${matiere}</strong> : ${devoir}`;//            li.innerText = `• ${matiere} : ${devoir}`;
+            li.innerHTML = `• <strong>${matiere}</strong> : ${devoir}`; //            li.innerText = `• ${matiere} : ${devoir}`;
             list.appendChild(li);
           });
         }
@@ -155,12 +125,13 @@ function loadHomework() { // afficher les devoirs
       }
     });
 }
-function loadPlanner() { // afficher les cours de demain
+function loadPlanner() {
+  // afficher les cours de demain
   fetch("/planner")
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       const list = document.getElementById("planner");
-      list.innerHTML = '';
+      list.innerHTML = "";
 
       if (data.length === 0) {
         const li = document.createElement("li");
@@ -169,15 +140,27 @@ function loadPlanner() { // afficher les cours de demain
         return;
       }
 
-      data.forEach(matiere => {
+      data.forEach((matiere) => {
         const li = document.createElement("li");
         li.innerText = `• ${matiere}`;
         list.appendChild(li);
       });
     })
-    .catch(err => console.error("Erreur planner:", err));
+    .catch((err) => console.error("Erreur planner:", err));
 }
+function loadElo() {
+  fetch("/elo")
+    .then((res) => res.json())
+    .then((data) => {
+      const list = document.getElementById("elo");
+      list.innerHTML = "";
 
+      const li = document.createElement("li");
+      li.innerText = `${data} 😎`;
+      list.appendChild(li);
+    })
+    .catch((err) => console.error("Erreur elo:", err));
+}
 
 // Échelle moyenne → image
 const averageImages = [
@@ -205,7 +188,7 @@ const averageImages = [
   { min: 18.5, max: 18.9, src: "static/ranks/immortal1.png" },
   { min: 18.9, max: 19.2, src: "static/ranks/immortal2.png" },
   { min: 19.2, max: 19.5, src: "static/ranks/immortal3.png" },
-  { min: 19.5, max: 999, src: "static/ranks/radiant.png" }
+  { min: 19.5, max: 999, src: "static/ranks/radiant.png" },
 ];
 
 // Fonction pour trouver l’image correspondant à la moyenne
@@ -234,10 +217,15 @@ function drawAverageCircle(average) {
           {
             data: [average, 20 - average],
 
-            backgroundColor: [getComputedStyle(document.documentElement).getPropertyValue("--titles-and-graphs").trim(), "#444"],
-            borderWidth: 0
-          }
-        ]
+            backgroundColor: [
+              getComputedStyle(document.documentElement)
+                .getPropertyValue("--titles-and-graphs")
+                .trim(),
+              "#444",
+            ],
+            borderWidth: 0,
+          },
+        ],
       },
       options: {
         cutout: "80%",
@@ -248,60 +236,69 @@ function drawAverageCircle(average) {
             display: true,
             text: average.toFixed(2),
             color: "#FFFFFF",
-            font: { size: 20 }
-          }
+            font: { size: 20 },
+          },
         },
-        animation: false
+        animation: false,
       },
       plugins: [
         {
           id: "centerImage",
-          afterDraw: chart => {
+          afterDraw: (chart) => {
             const { ctx, chartArea } = chart;
             const xCenter = (chartArea.left + chartArea.right) / 2;
             const yCenter = (chartArea.top + chartArea.bottom) / 2;
             const size = chart.width * 0.5; // taille = 50 % du canvas
 
             ctx.save();
-            ctx.drawImage(img, xCenter - size / 2, yCenter - size / 2, size, size);
+            ctx.drawImage(
+              img,
+              xCenter - size / 2,
+              yCenter - size / 2,
+              size,
+              size,
+            );
             ctx.restore();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
   };
 }
 
-
-function drawBarChart(labels, values) { // dessiner le graphe de moyennes
+function drawBarChart(labels, values) {
+  // dessiner le graphe de moyennes
   const ctx = document.getElementById("barChart").getContext("2d");
   new Chart(ctx, {
-    type: 'bar',
+    type: "bar",
     data: {
       labels: labels,
-      datasets: [{
-        label: "Moyenne",
-        data: values,
-        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--titles-and-graphs").trim() //"#00D0FF"// ici la couleur des barres
-      }]
+      datasets: [
+        {
+          label: "Moyenne",
+          data: values,
+          backgroundColor: getComputedStyle(document.documentElement)
+            .getPropertyValue("--titles-and-graphs")
+            .trim(), //"#00D0FF"// ici la couleur des barres
+        },
+      ],
     },
     options: {
       scales: {
         x: {
-          ticks: { color: "#FFFFFF" }
+          ticks: { color: "#FFFFFF" },
         },
         y: {
           beginAtZero: true,
           max: 20,
-          ticks: { color: "#FFFFFF" }
-        }
+          ticks: { color: "#FFFFFF" },
+        },
       },
       plugins: {
         legend: {
-          labels: { color: "#FFFFFF" }
-        }
-      }
-    }
+          labels: { color: "#FFFFFF" },
+        },
+      },
+    },
   });
 }
-
