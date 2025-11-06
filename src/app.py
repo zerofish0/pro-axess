@@ -114,6 +114,7 @@ def logout():
     user_id = session.get("user_id")
     if user_id and user_id in axess_sessions:
         del axess_sessions[user_id]
+    session.permanent = False
     session.clear()
     return jsonify({"success": True})
 
