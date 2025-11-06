@@ -106,7 +106,17 @@ function loadGrades() {
 function loadHomework() {
   // afficher les devoirs
   fetch("/homework")
-    .then((res) => res.json())
+    .then((res) => {
+      if (res.redirected) {
+        window.location.href = res.url;
+        return Promise.reject();
+      }
+      if (res.status === 302) {
+        window.location.href = "/";
+        return Promise.reject();
+      }
+      return res.json();
+    })
     .then((data) => {
       console.log("DEBUGGING");
       const list = document.getElementById("homework");
