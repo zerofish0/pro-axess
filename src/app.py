@@ -105,7 +105,7 @@ def elo():
 def planner():
     user_data = get_user_data()
     if not user_data:
-        return jsonify({"success": False, "error": "Non authentifié"}), 401
+        return redirect("/")
     return jsonify(user_data["planner"])
 
 
