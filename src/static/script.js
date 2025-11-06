@@ -148,7 +148,17 @@ function loadHomework() {
 function loadPlanner() {
   // afficher les cours de demain
   fetch("/planner")
-    .then((res) => res.json())
+    .then((res) => {
+      if (res.redirected) {
+        window.location.href = res.url;
+        return Promise.reject();
+      }
+      if (res.status === 302) {
+        window.location.href = "/";
+        return Promise.reject();
+      }
+      return res.json();
+    })
     .then((data) => {
       const list = document.getElementById("planner");
       list.innerHTML = "";
