@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 CORS(app, supports_credentials=True)
 
 # Stockage des sessions utilisateur et de leurs données
