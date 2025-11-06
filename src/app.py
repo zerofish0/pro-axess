@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, redirect
 from flask_cors import CORS
 import pro_axess_lib
 from datetime import datetime, timedelta
@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=7)
 CORS(app, supports_credentials=True)
 
 # Stockage des sessions utilisateur et de leurs données
@@ -62,6 +63,7 @@ def login():
             "elo": elo,
         }
         session["user_id"] = user_id
+        session.permanent = True
 
         return jsonify({"success": True, "infos": infos})
     except Exception as e:
@@ -79,7 +81,7 @@ def get_user_data():
 def grades():
     user_data = get_user_data()
     if not user_data:
-        return jsonify({"success": False, "error": "Non authentifié"}), 401
+        return redirect("/")
     return jsonify(user_data["grades"])
 
 
@@ -87,7 +89,7 @@ def grades():
 def homework():
     user_data = get_user_data()
     if not user_data:
-        return jsonify({"success": False, "error": "Non authentifié"}), 401
+        return redirect("/")
     return jsonify(user_data["homework"])
 
 
@@ -95,7 +97,7 @@ def homework():
 def elo():
     user_data = get_user_data()
     if not user_data:
-        return jsonify({"success": False, "error": "Non authentifié"}), 401
+        return redirect("/")
     return jsonify(user_data["elo"])
 
 
@@ -103,7 +105,7 @@ def elo():
 def planner():
     user_data = get_user_data()
     if not user_data:
-        return jsonify({"success": False, "error": "Non authentifié"}), 401
+        return redirect("/")
     return jsonify(user_data["planner"])
 
 
@@ -112,6 +114,7 @@ def logout():
     user_id = session.get("user_id")
     if user_id and user_id in axess_sessions:
         del axess_sessions[user_id]
+    session.permanent = False
     session.clear()
     return jsonify({"success": True})
 
