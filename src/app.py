@@ -63,6 +63,7 @@ def login():
             "elo": elo,
         }
         session["user_id"] = user_id
+        session.permanent = True
 
         return jsonify({"success": True, "infos": infos})
     except Exception as e:
