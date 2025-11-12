@@ -1,5 +1,5 @@
 # Pro Axess
-Un client alternatif à Pronote, minimaliste, disponiblee (ici)[pro-axess.onrender.com]
+Un client alternatif à Pronote, minimaliste, disponiblee (ici)[pro-axess.onrender.com] où à l'adresse : https://bit.ly/pro-axess
 
 La version en ligne n'est paramétrée que pour un établissement en particulier, pour adapter le programme au votre, il vous ser nécéssaire de modifier l'url dans src/pro_axess_lib.py
 ## Usage
