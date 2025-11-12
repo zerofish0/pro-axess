@@ -268,7 +268,10 @@ ul {
   display: block;
   margin: 0 auto;
 }
-
+#momentum {
+    font-size: 1.5em;
+    font-weight: bold;
+}
 /* Responsive pour téléphone */
 @media (max-width: 600px) {
   body {

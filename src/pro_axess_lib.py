@@ -1,6 +1,5 @@
 import pronotepy
 import datetime
-import elo
 import copy
 
 
@@ -21,7 +20,7 @@ class Axess:
         self.homeworks = dict()
         self.planner = dict()
 
-        self.elo = elo.MyElo()
+        self.momentum = int()
 
         if self.client.logged_in:
             self._log(f"Logged in as {username}")
@@ -108,7 +107,8 @@ class Axess:
         self._log("Fetched Planner.")
         return self.planner
 
-    def getElo(self):
+    def getMomentum(self):
+        allgrades = list()
         grades = copy.copy(self.grades)
         for subject in grades.keys():
             if subject == "global_avg":
@@ -116,5 +116,7 @@ class Axess:
             else:
                 data = grades[subject]["details"]
                 for grade in data:
-                    self.elo.updateElo([grade[0], grade[1]])
-        return self.elo.elo
+                    allgrades.append([grade[0], grade[1]])
+        x = sum(n[0]*n[1] for n in allgrades)
+        self.momentum = round(1 + (x ** 0.8451),2)
+        return self.momentum

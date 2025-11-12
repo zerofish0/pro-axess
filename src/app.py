@@ -50,7 +50,7 @@ def login():
         homework = safe_json(axess_instance.getHomeworks(tomorrow_str))
         planner_date = (datetime.today() + timedelta(days=1)).strftime("%d/%m/%Y")
         planner = axess_instance.getPlanner(planner_date)
-        elo = axess_instance.getElo()
+        momentum = axess_instance.getMomentum()
 
         # Stockage dans la session Flask
         user_id = str(uuid.uuid4())
@@ -60,7 +60,7 @@ def login():
             "grades": grades,
             "homework": homework,
             "planner": planner,
-            "elo": elo,
+            "momentum": momentum,
         }
         session["user_id"] = user_id
         session.permanent = True
@@ -93,12 +93,12 @@ def homework():
     return jsonify(user_data["homework"])
 
 
-@app.route("/elo", methods=["GET"])
-def elo():
+@app.route("/momentum", methods=["GET"])
+def momentum():
     user_data = get_user_data()
     if not user_data:
         return redirect("/")
-    return jsonify(user_data["elo"])
+    return jsonify(user_data["momentum"])
 
 
 @app.route("/planner", methods=["GET"])

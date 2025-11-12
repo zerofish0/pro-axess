@@ -42,7 +42,7 @@ function login() {
         loadGrades();
         loadHomework();
         loadPlanner();
-        loadElo();
+        loadMomentum();
       } else {
         document.getElementById("error").innerText = data.error;
       }
@@ -178,8 +178,8 @@ function loadPlanner() {
     })
     .catch((err) => console.error("Erreur planner:", err));
 }
-function loadElo() {
-  fetch("/elo")
+function loadMomentum() {
+  fetch("/momentum")
     .then((res) => {
       if (res.redirected) {
         window.location.href = res.url;
@@ -192,16 +192,19 @@ function loadElo() {
       return res.json();
     })
     .then((data) => {
-      const list = document.getElementById("elo");
+      const list = document.getElementById("momentum");
       list.innerHTML = "";
 
       const li = document.createElement("li");
       li.innerText = `${data} 😎`;
       list.appendChild(li);
     })
-    .catch((err) => console.error("Erreur elo:", err));
+    .catch((err) => console.error("Erreur momentum:", err));
 }
-
+function toggleInfo() {
+    const info = document.getElementById("MomentumInfo");
+    info.style.display = (info.style.display === "none" || info.style.display === "") ? "block" : "none";
+}
 // Échelle moyenne → image
 const averageImages = [
   { min: 0.1, max: 2, src: "static/ranks/iron1.png" },
