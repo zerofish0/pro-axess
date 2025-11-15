@@ -1,5 +1,5 @@
 # Pro Axess
-Un client alternatif à Pronote, minimaliste, disponiblee (ici)[pro-axess.onrender.com] où à l'adresse : https://bit.ly/pro-axess
+Un client alternatif à Pronote, minimaliste, disponiblee [ici](pro-axess.onrender.com) où à l'adresse : https://bit.ly/pro-axess
 
 La version en ligne n'est paramétrée que pour un établissement en particulier, pour adapter le programme au votre, il vous ser nécéssaire de modifier l'url dans src/pro_axess_lib.py
 ## Usage
@@ -16,3 +16,6 @@ puis connectez vous à 127.0.0.1:5000
 
 ## Note
 Ce projet est en développement actif, n'hésitez pas à faire part de vos suggestions ou quoi que ce soit d'autres :)
+
+## ATTENTION
+Nous avon découvert que Pronote utilisat une méthode mathématique de calcul des moyennes erronée. Celle-ci modifie l'influence du coefficent sur la note en fonction du barème de la note. Pour plus d'informations, consultez [ce document](https://www.mediafire.com/file/nuad6pe4gwr9ce3/thepronoteproblem.pdf/file)
