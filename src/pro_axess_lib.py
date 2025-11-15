@@ -10,9 +10,11 @@ class Axess:
         password,
         url="https://0280994d.index-education.net/pronote/eleve.html",
         verbose=True,
+        average_method = "conventional"
     ):
         self.url = url
         self.verbose = verbose
+        self.average_method = average_method
         self.client = self._connect(username, password)
 
         self.infos = dict()
@@ -54,27 +56,21 @@ class Axess:
             subject = grade.subject.name
             if not subject in data.keys():
                 data[subject] = {"average": 9999, "details": []}
-            data[grade.subject.name]["details"].append(
-                [
-                    float(str(grade.grade).replace(",", ".")) / int(grade.out_of) * 20,
-                    float(grade.coefficient),
-                ]
-            )
-        avg_sum = 0
-        avg_len = 0
+            try : 
+                data[subject]["details"].append(
+                    [
+                        float(str(grade.grade).replace(",", ".")) / int(grade.out_of) * 20,
+                        float(grade.coefficient),
+                    ]
+                )
+            except :
+                print(f"Had a problem with grade {grade.grade} in subject {subject}")
         for subject in data.keys():
-            _sum = 0
-            _sum_coeff = 0
-            for grade in data[subject]["details"]:
-                _sum += grade[0] * grade[1]
-                _sum_coeff += grade[1]
-                # avg_sum += _sum/_sum_coeff
-                # avg_len += 1
-            data[subject]["average"] = round(_sum / _sum_coeff, 2)
-            avg_sum += data[subject]["average"]
-            avg_len += 1
-        data["global_avg"] = avg_sum / avg_len
+            data0 = data[subject]["details"]
+            data[subject]["average"] = sum(n[0]*n[1] for n in data0) / sum(n[1] for n in data0)
+        data["global_avg"] = sum(data[subject]["average"] for subject in data.keys()) / len(data.keys())
         self.grades = data
+        print(data)
         self._log("Fetched grades.")
         return self.grades
 
